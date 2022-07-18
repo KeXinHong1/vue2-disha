@@ -5,7 +5,10 @@
 		</div>
 		<div class="reight">
 			<div class="denlu">
-				<p><b><span class='biaoti'>欢迎回来</span></b></p>
+				<p>
+					<b><span class="biaoti">欢迎回来</span></b>
+				</p>
+				<br />
 				<div data-v-d3183e6a="" class="zi">
 					<span class="line" data-v-d3183e6a="">——&nbsp;</span>
 					<span data-v-d3183e6a="">账号密码登录</span>
@@ -31,9 +34,10 @@
 </template>
 
 <script>
+import router from '@/router'
+import Userapi from '../../api/user'
+import { mapActions } from 'vuex'
 export default {
-	name: 'VueDishaIndex',
-
 	data() {
 		return {
 			loginform: {
@@ -61,13 +65,24 @@ export default {
 	mounted() {},
 
 	methods: {
-		denlucg() {
-			this.$notify({
-				title: '登录成功',
-				message: '这是一条成功的提示消息',
-				type: 'success',
-			})
+		async denlucg() {
+			try {
+				const token = await this.getlogin(this.loginform)
+				console.log(token)
+				this.$router.push('/')
+				this.$notify({
+					title: '登录成功',
+					type: 'success',
+				})
+			} catch (error) {
+				this.$notify.error({
+					title: '登陆失败',
+				})
+			}
 		},
+		...mapActions({
+			getlogin: 'user/getlogin',
+		}),
 	},
 }
 </script>
@@ -81,6 +96,7 @@ export default {
 	height: 100%;
 	position: absolute;
 	bottom: 0px;
+	overflow: hidden;
 }
 .left {
 	width: 70%;
@@ -145,5 +161,8 @@ export default {
 	height: 35px;
 	background-color: #626aef;
 	border: none;
+}
+.el-input {
+	border-radius: 10px;
 }
 </style>
